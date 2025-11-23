@@ -2,7 +2,7 @@ package com.bezkoder.spring.jwt.mongodb.models;
 
 import java.time.Instant;
 
-import javax.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotBlank;
 
 import org.springframework.data.annotation.Id;
 import org.springframework.data.mongodb.core.mapping.Document;
