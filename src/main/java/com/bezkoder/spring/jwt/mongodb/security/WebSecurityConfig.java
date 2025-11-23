@@ -6,6 +6,8 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
+import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
+import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
@@ -21,10 +23,7 @@ import com.bezkoder.spring.jwt.mongodb.security.services.UserDetailsServiceImpl;
 
 @Configuration
 @EnableWebSecurity
-@EnableGlobalMethodSecurity(
-		// securedEnabled = true,
-		// jsr250Enabled = true,
-		prePostEnabled = true)
+@EnableMethodSecurity(prePostEnabled = true)
 public class WebSecurityConfig {
 	@Autowired
 	UserDetailsServiceImpl userDetailsService;
@@ -58,14 +57,14 @@ public class WebSecurityConfig {
 	@Bean
 	public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
 
-		http.cors().and().csrf().disable()
-			.exceptionHandling().authenticationEntryPoint(unauthorizedHandler).and()
-			.sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).and()
-			.authorizeHttpRequests()
-				.requestMatchers("/api/auth/**", "/api/test/**").permitAll()
-				.anyRequest().authenticated();
+			http.cors(Customizer.withDefaults())
+				.csrf(csrf -> csrf.disable())
+				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
+				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/test/**").permitAll()
+					.anyRequest().authenticated());
 
-		http.authenticationProvider(authenticationProvider());
+			http.authenticationProvider(authenticationProvider());
 		/*
 		 * http.csrf().disable()// to disable CRSF protection
 		 * .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
