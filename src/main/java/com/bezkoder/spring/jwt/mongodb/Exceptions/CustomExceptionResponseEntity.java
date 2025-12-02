@@ -1,6 +1,9 @@
 package com.bezkoder.spring.jwt.mongodb.Exceptions;
 
 import java.util.Date;
+import java.util.Map;
+import java.util.HashMap;
+import java.util.LinkedHashMap;
 
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -51,12 +54,30 @@ public class CustomExceptionResponseEntity extends ResponseEntityExceptionHandle
                 HttpStatus.NOT_FOUND);
     }
 
-        @Override
-        protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
+    @Override
+    protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
             HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-        return new ResponseEntity<Object>(
-                new ExceptionResponse(new Date(), ex.getMessage(), ex.getBindingResult().toString()),
-                HttpStatus.BAD_REQUEST);
+
+        Map<String, Object> body = new LinkedHashMap<>();
+        body.put("timestamp", new Date());
+        body.put("details", request.getDescription(false));
+
+        Map<String, String> fieldErrors = new HashMap<>();
+        ex.getBindingResult().getFieldErrors().forEach(error ->
+            fieldErrors.put(error.getField(), error.getDefaultMessage())
+        );
+
+        // Use the first field error message as the top-level message so clients
+        // see the concrete validation message (e.g. "Please provide a valid email address").
+        String primaryMessage = ex.getBindingResult().getFieldErrors().stream()
+            .findFirst()
+            .map(err -> err.getDefaultMessage())
+            .orElse("Validation Failed");
+
+        body.put("message", primaryMessage);
+        body.put("errors", fieldErrors);
+
+        return new ResponseEntity<>(body, HttpStatus.BAD_REQUEST);
     }
 
     @ExceptionHandler(TokenRefreshException.class)

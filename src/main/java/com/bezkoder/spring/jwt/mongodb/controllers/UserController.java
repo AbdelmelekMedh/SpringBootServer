@@ -64,6 +64,7 @@ public class UserController {
         return new ResponseEntity<List<User>>(users, HttpStatus.OK);
     }
 
+    @SuppressWarnings("null")
     @GetMapping(value = "/user/{id}"/* , consumes = MediaType.APPLICATION_JSON_VALUE */)
     public ResponseEntity<?> getUserById(@PathVariable("id") String id) {
         final User user = userRepository.findById(id).orElseThrow(() -> new UserNotFoundException(
@@ -72,6 +73,7 @@ public class UserController {
         return ResponseEntity.ok(user);
     }
 
+    @SuppressWarnings("null")
     @DeleteMapping(value = "/user/{id}"/* , consumes = MediaType.APPLICATION_JSON_VALUE */)
     @PreAuthorize("hasRole('ADMIN')")
     public ResponseEntity<?> deleteUserById(@PathVariable("id") String id) {
@@ -86,6 +88,7 @@ public class UserController {
         }
     }
 
+    @SuppressWarnings("null")
     @PutMapping("/user/{id}")
     public ResponseEntity<?> updateUserProfileById(@PathVariable("id") String id,
             @RequestBody UserProfileRequest userProfile) {

@@ -4,13 +4,12 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
-import org.springframework.security.config.annotation.method.configuration.EnableGlobalMethodSecurity;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
+
 import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -36,13 +35,11 @@ public class WebSecurityConfig {
 		return new AuthTokenFilter();
 	}
 
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder());
-		return authProvider;
-	}
+    
+	// Let Spring Security auto-configure the AuthenticationProvider using
+	// the `UserDetailsService` bean and the `PasswordEncoder` bean.
+	// Avoid constructing DaoAuthenticationProvider directly to prevent
+	// using deprecated constructors/mutators.
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -64,7 +61,9 @@ public class WebSecurityConfig {
 				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/test/**").permitAll()
 					.anyRequest().authenticated());
 
-			http.authenticationProvider(authenticationProvider());
+			// Spring Boot will auto-configure an appropriate AuthenticationProvider
+			// when a `UserDetailsService` bean and a `PasswordEncoder` bean are present.
+			// No explicit `authenticationProvider(...)` registration is required here.
 		/*
 		 * http.csrf().disable()// to disable CRSF protection
 		 * .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).

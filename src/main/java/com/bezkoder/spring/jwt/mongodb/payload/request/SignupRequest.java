@@ -6,13 +6,13 @@ import java.util.Set;
 import jakarta.validation.constraints.*;
 
 public class SignupRequest {
-    @NotBlank
-    @Size(min = 3, max = 20)
+    @NotBlank(message = "{NotBlank.signupRequest.username}")
+    @Size(min = 3, max = 20, message = "{Size.signupRequest.username}")
     private String username;
 
-    @NotBlank
-    @Size(max = 50)
-    @Email
+    @NotBlank(message = "{NotBlank.signupRequest.email}")
+    @Size(max = 50, message = "{Size.signupRequest.email}")
+    @com.bezkoder.spring.jwt.mongodb.validation.ValidEmail
     private String email;
 
     private Set<String> roles;
@@ -29,8 +29,8 @@ public class SignupRequest {
         this.dateOfBirth = dateOfBirth;
     }
 
-    @NotBlank
-    @Size(min = 6, max = 40)
+    @NotBlank(message = "{NotBlank.signupRequest.password}")
+    @Size(min = 6, max = 40, message = "{Size.signupRequest.password}")
     private String password;
 
     public String getUsername() {
