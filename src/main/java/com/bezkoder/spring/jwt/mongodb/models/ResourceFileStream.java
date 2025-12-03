@@ -18,6 +18,9 @@ public class ResourceFileStream {
     @Size(min = 2)
     private String filename;
 
+    @NotBlank
+    private String storedName;
+
     private List<String> tags;
 
     @NotBlank
@@ -26,10 +29,11 @@ public class ResourceFileStream {
     @NotBlank
     private User author;
 
-    public ResourceFileStream(@NotBlank @Size(min = 2) String filename, List<String> tags, @NotBlank String path,
+    public ResourceFileStream(@NotBlank @Size(min = 2) String filename, @NotBlank String storedName, List<String> tags, @NotBlank String path,
             @NotBlank User author) {
         // this.id = id;
         this.filename = filename;
+        this.storedName = storedName;
         this.tags = tags;
         this.path = path;
         this.author = author;
@@ -49,6 +53,14 @@ public class ResourceFileStream {
 
     public void setFilename(String filename) {
         this.filename = filename;
+    }
+
+    public String getStoredName() {
+        return storedName;
+    }
+
+    public void setStoredName(String storedName) {
+        this.storedName = storedName;
     }
 
     public List<String> getTags() {
