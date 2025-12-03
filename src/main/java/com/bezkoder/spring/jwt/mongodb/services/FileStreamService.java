@@ -1,4 +1,4 @@
-package com.bezkoder.services;
+package com.bezkoder.spring.jwt.mongodb.services;
 
 import java.io.IOException;
 import java.nio.file.Files;
@@ -15,10 +15,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.http.HttpHeaders;
 import org.springframework.core.io.Resource;
 
-import com.bezkoder.dto.ResourceFileStreamDTO;
 import com.bezkoder.spring.jwt.mongodb.Exceptions.FileStreamNotFoundException;
 import com.bezkoder.spring.jwt.mongodb.Exceptions.ForbiddenMimeTypeException;
 import com.bezkoder.spring.jwt.mongodb.Exceptions.UserNotFoundException;
+import com.bezkoder.spring.jwt.mongodb.dto.ResourceFileStreamDTO;
 import com.bezkoder.spring.jwt.mongodb.models.ResourceFileStream;
 import com.bezkoder.spring.jwt.mongodb.models.User;
 import com.bezkoder.spring.jwt.mongodb.repository.FileStreamRepository;

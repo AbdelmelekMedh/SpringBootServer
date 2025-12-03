@@ -1,4 +1,4 @@
-package com.bezkoder.dto;
+package com.bezkoder.spring.jwt.mongodb.dto;
 
 import com.bezkoder.spring.jwt.mongodb.models.ResourceFileStream;
 

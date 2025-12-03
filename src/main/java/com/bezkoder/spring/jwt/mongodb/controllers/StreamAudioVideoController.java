@@ -14,10 +14,9 @@ import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.core.io.Resource;
 
-
-import com.bezkoder.dto.ResourceFileStreamDTO;
-import com.bezkoder.services.FileStreamService;
+import com.bezkoder.spring.jwt.mongodb.dto.ResourceFileStreamDTO;
 import com.bezkoder.spring.jwt.mongodb.payload.response.MessageResponse;
+import com.bezkoder.spring.jwt.mongodb.services.FileStreamService;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
