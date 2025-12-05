@@ -77,7 +77,7 @@ public class AuthController {
 		final RefreshToken refreshToken = this.resfreshTokenService.creatRefreshToken(userDetails.getId());
 		return ResponseEntity
 				.ok(new JwtResponse(jwt, refreshToken.getToken(), userDetails.getId(), userDetails.getUsername(),
-						userDetails.getEmail(), userDetails.getGender(), userDetails.getDateOfBirth(), roles));
+						userDetails.getEmail(), roles));
 
 	}
 
@@ -94,7 +94,7 @@ public class AuthController {
 
 		// Create new user's account
 		final User user = new User(signUpRequest.getUsername(), signUpRequest.getEmail(),
-				encoder.encode(signUpRequest.getPassword()), signUpRequest.getGender(), signUpRequest.getDateOfBirth());
+				encoder.encode(signUpRequest.getPassword()));
 
 		final Set<String> strRoles = signUpRequest.getRoles();
 		final Set<Role> roles = new HashSet<>();
