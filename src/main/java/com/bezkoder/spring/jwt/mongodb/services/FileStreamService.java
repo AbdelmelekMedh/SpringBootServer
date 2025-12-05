@@ -8,6 +8,7 @@ import java.nio.file.StandardCopyOption;
 import java.time.LocalDate;
 import java.util.List;
 
+import org.springframework.stereotype.Service;
 import org.springframework.core.io.UrlResource;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
@@ -23,7 +24,6 @@ import com.bezkoder.spring.jwt.mongodb.models.ResourceFileStream;
 import com.bezkoder.spring.jwt.mongodb.models.User;
 import com.bezkoder.spring.jwt.mongodb.repository.FileStreamRepository;
 import com.bezkoder.spring.jwt.mongodb.repository.UserRepository;
-import com.jetbrains.exported.JBRApi.Service;
 
 import jakarta.servlet.http.HttpServletRequest;
 import lombok.RequiredArgsConstructor;
