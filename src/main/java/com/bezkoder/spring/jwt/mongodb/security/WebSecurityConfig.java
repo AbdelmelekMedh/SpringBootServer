@@ -35,11 +35,6 @@ public class WebSecurityConfig {
 		return new AuthTokenFilter();
 	}
 
-    
-	// Let Spring Security auto-configure the AuthenticationProvider using
-	// the `UserDetailsService` bean and the `PasswordEncoder` bean.
-	// Avoid constructing DaoAuthenticationProvider directly to prevent
-	// using deprecated constructors/mutators.
 
 	@Bean
 	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
@@ -58,23 +53,9 @@ public class WebSecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/test/**").permitAll()
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/test/**", "/uploads/**").permitAll()
 					.anyRequest().authenticated());
 
-			// Spring Boot will auto-configure an appropriate AuthenticationProvider
-			// when a `UserDetailsService` bean and a `PasswordEncoder` bean are present.
-			// No explicit `authenticationProvider(...)` registration is required here.
-		/*
-		 * http.csrf().disable()// to disable CRSF protection
-		 * .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS).
-		 * and().authorizeRequests() .antMatchers("/signup",
-		 * "/api/post").permitAll().anyRequest().authenticated();
-		 */
-
-		/*
-		 * http.authorizeRequests().antMatchers("api/auth/signup", "/",
-		 * "/api/post").permitAll().anyRequest() .authenticated().and().httpBasic();
-		 */
 
 		http.addFilterBefore(authenticationJwtTokenFilter(), UsernamePasswordAuthenticationFilter.class);
 

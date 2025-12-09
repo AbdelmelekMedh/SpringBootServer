@@ -5,6 +5,8 @@ import org.springframework.stereotype.Service;
 import com.bezkoder.spring.jwt.mongodb.models.Profile;
 import com.bezkoder.spring.jwt.mongodb.repository.ProfileRepository;
 import com.bezkoder.spring.jwt.mongodb.repository.UserRepository;
+
+import java.util.Date;
 import java.util.Optional;  
 import lombok.RequiredArgsConstructor;
 
@@ -43,7 +45,7 @@ public class ProfileService {
             profile.setSocialLinks(updatedProfile.getSocialLinks());
             profile.setInterests(updatedProfile.getInterests());
             profile.setLanguages(updatedProfile.getLanguages());
-            profile.setUpdatedAt(updatedProfile.getUpdatedAt());
+            profile.setUpdatedAt(new Date());
             return profileRepository.save(profile);
         }).orElseThrow(() -> new RuntimeException("Profile not found for user ID: " + userId));
     }

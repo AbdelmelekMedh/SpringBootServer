@@ -2,7 +2,9 @@ package com.bezkoder.spring.jwt.mongodb.controllers;
 
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.DeleteMapping;
@@ -12,9 +14,13 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestPart;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.multipart.MultipartFile;
 
+import com.bezkoder.spring.jwt.mongodb.models.ImageProfile;
 import com.bezkoder.spring.jwt.mongodb.models.Profile;
+import com.bezkoder.spring.jwt.mongodb.services.FileStorageService;
 import com.bezkoder.spring.jwt.mongodb.services.ProfileService;
 
 import jakarta.validation.Valid;
@@ -27,6 +33,8 @@ import lombok.RequiredArgsConstructor;
 public class ProfileController {
     
     private final ProfileService profileService;
+    @Autowired
+    private FileStorageService fileStorageService;
 
     @PostMapping
     public ResponseEntity<Profile> createProfile(@Valid @RequestBody Profile profile) {
@@ -46,12 +54,26 @@ public class ProfileController {
                 .orElseGet(() -> new ResponseEntity<>(HttpStatus.NOT_FOUND));
     }
 
-    @PutMapping("/{userId}")
-    public ResponseEntity<Profile> updateProfile(@PathVariable String userId, @Valid @RequestBody Profile updatedProfile) {
+    @PutMapping(
+    value = "/{userId}",
+    consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<Profile> updateProfile(
+        @PathVariable String userId,
+        @RequestPart("profile") @Valid Profile updatedProfile,
+        @RequestPart(value = "image", required = false) MultipartFile imageFile
+    ) {
         try {
-            // Note: The service uses the ID from the path, not the request body's potential ID
+            
+            if (imageFile != null && !imageFile.isEmpty()) {
+            String imageUrl = fileStorageService.save(imageFile); 
+            ImageProfile image = new ImageProfile();
+            image.setFilePathUrl(imageUrl);
+            updatedProfile.setImageProfile(image);
+            }
+
             Profile result = profileService.updateProfile(userId, updatedProfile);
             return new ResponseEntity<>(result, HttpStatus.OK);
+            
         } catch (RuntimeException e) {
             // Catches the "Profile not found" exception
             return new ResponseEntity(e.getMessage(), HttpStatus.NOT_FOUND);

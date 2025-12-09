@@ -49,7 +49,20 @@ public class Profile {
 
     // Constructors, Getters, and Setters
     public Profile() {
-    }
+    this.Name = "";
+    this.address = "";
+    this.phoneNumber = "";
+    this.bio = "";
+    this.gender = "";
+    this.dateOfBirth = null; // optional, can stay null
+    this.imageProfile = new ImageProfile(); // or null if allowed
+    this.createdAt = new Date();
+    this.updatedAt = new Date();
+    this.isActive = true;
+    this.socialLinks = Map.of(); // empty map
+    this.interests = List.of();  // empty list
+    this.languages = List.of();  // empty list
+}
 
     public Profile(String userId, String name, String address, String phoneNumber, String bio,String gender, Date dateOfBirth,
                    ImageProfile imageProfile, Date createdAt, Date updatedAt, boolean isActive,
