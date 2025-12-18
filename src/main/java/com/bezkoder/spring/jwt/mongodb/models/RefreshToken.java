@@ -13,19 +13,17 @@ public class RefreshToken {
     @Id
     private String id;
 
-    @NotBlank
     private User user;
 
     @NotBlank
     private String token;
 
-    @NotBlank
     private Instant expiryDate;
 
     public RefreshToken() {
     }
 
-    public RefreshToken(String id, @NotBlank User user, @NotBlank String token, @NotBlank Instant expiryDate) {
+    public RefreshToken(String id, User user, @NotBlank String token, Instant expiryDate) {
         this.id = id;
         this.user = user;
         this.token = token;

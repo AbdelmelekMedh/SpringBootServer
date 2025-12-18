@@ -80,10 +80,6 @@ public class ProfileController {
         }
     }
 
-    /**
-     * Delete a profile by its associated User ID.
-     * Accessible via DELETE /api/profile/{userId}
-     */
     @DeleteMapping("/{userId}")
     public ResponseEntity<HttpStatus> deleteProfile(@PathVariable String userId) {
         try {

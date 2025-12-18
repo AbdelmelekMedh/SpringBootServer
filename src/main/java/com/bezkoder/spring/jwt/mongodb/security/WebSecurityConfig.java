@@ -53,7 +53,7 @@ public class WebSecurityConfig {
 				.csrf(csrf -> csrf.disable())
 				.exceptionHandling(ex -> ex.authenticationEntryPoint(unauthorizedHandler))
 				.sessionManagement(sm -> sm.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
-				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/test/**", "/uploads/**").permitAll()
+				.authorizeHttpRequests(auth -> auth.requestMatchers("/api/auth/**", "/api/test/**", "/uploads/**", "/api/video/public/**", "/api/video/download/**").permitAll()
 					.anyRequest().authenticated());
 
 

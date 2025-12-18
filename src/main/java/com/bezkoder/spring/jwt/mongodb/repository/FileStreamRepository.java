@@ -6,6 +6,8 @@ import java.util.Optional;
 import com.bezkoder.spring.jwt.mongodb.models.ResourceFileStream;
 import com.bezkoder.spring.jwt.mongodb.models.User;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
 public interface FileStreamRepository extends MongoRepository<ResourceFileStream, String> {
@@ -19,5 +21,9 @@ public interface FileStreamRepository extends MongoRepository<ResourceFileStream
     List<ResourceFileStream> findByFilenameContaining(String filename);
 
     Optional<List<ResourceFileStream>> findByFilename(String filename);
+
+    List<ResourceFileStream> findByIsPublicTrueOrderByIdDesc();
+
+    Page<ResourceFileStream> findByIsPublicTrue(Pageable pageable);
 
 }

@@ -1,13 +1,25 @@
 package com.bezkoder.spring.jwt.mongodb.models;
 
+import java.time.Instant;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
+import lombok.AllArgsConstructor;
+import lombok.Data;
+import lombok.NoArgsConstructor;
 
+import org.springframework.data.annotation.CreatedDate;
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.config.EnableMongoAuditing;
 import org.springframework.data.mongodb.core.mapping.Document;
 
+@EnableMongoAuditing
+@Data
+@NoArgsConstructor
+@AllArgsConstructor
 @Document(collection = "resources")
 public class ResourceFileStream {
 
@@ -21,70 +33,28 @@ public class ResourceFileStream {
     @NotBlank
     private String storedName;
 
-    private List<String> tags;
+    private List<String> tags = new ArrayList<>();
 
     @NotBlank
     private String path;
 
-    @NotBlank
+    @NotNull
     private User author;
 
-    public ResourceFileStream(@NotBlank @Size(min = 2) String filename, @NotBlank String storedName, List<String> tags, @NotBlank String path,
-            @NotBlank User author) {
-        // this.id = id;
-        this.filename = filename;
-        this.storedName = storedName;
-        this.tags = tags;
-        this.path = path;
-        this.author = author;
-    }
+    @NotBlank
+    private String description;
 
-    public String getId() {
-        return id;
-    }
+    private boolean isPublic = true;
 
-    public void setId(String id) {
-        this.id = id;
-    }
+    private int views = 0;
+    private int likes = 0;
+    private int commentsCount = 0;
 
-    public String getFilename() {
-        return filename;
-    }
+    private List<Comments> comments = new ArrayList<>();
 
-    public void setFilename(String filename) {
-        this.filename = filename;
-    }
+    private int shares = 0;
+    private int downloads = 0;
 
-    public String getStoredName() {
-        return storedName;
-    }
-
-    public void setStoredName(String storedName) {
-        this.storedName = storedName;
-    }
-
-    public List<String> getTags() {
-        return tags;
-    }
-
-    public void setTags(List<String> tags) {
-        this.tags = tags;
-    }
-
-    public String getPath() {
-        return path;
-    }
-
-    public void setPath(String path) {
-        this.path = path;
-    }
-
-    public User getAuthor() {
-        return author;
-    }
-
-    public void setAuthor(User author) {
-        this.author = author;
-    }
-
+    @CreatedDate
+    private Instant createdAt;
 }
