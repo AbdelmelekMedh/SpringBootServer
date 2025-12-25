@@ -25,5 +25,5 @@ public interface FileStreamRepository extends MongoRepository<ResourceFileStream
     List<ResourceFileStream> findByIsPublicTrueOrderByIdDesc();
 
     Page<ResourceFileStream> findByIsPublicTrue(Pageable pageable);
-
+    
 }

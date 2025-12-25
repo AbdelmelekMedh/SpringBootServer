@@ -3,7 +3,6 @@ package com.bezkoder.spring.jwt.mongodb.dto;
 import java.time.Instant;
 import java.util.List;
 
-import com.bezkoder.spring.jwt.mongodb.models.Comments;
 import com.bezkoder.spring.jwt.mongodb.models.ResourceFileStream;
 
 import lombok.AllArgsConstructor;
@@ -29,7 +28,7 @@ public class ResourceFileStreamDTO {
     private String description;
     private boolean isPublic;
     private List<String> tags;
-    private List<Comments> comments;
+    private List<CommentResponseDTO> comments;
     private Instant createdAt;
 
     public static ResourceFileStreamDTO fromEntity(ResourceFileStream file) {
@@ -48,7 +47,7 @@ public class ResourceFileStreamDTO {
                 file.getDescription(),
                 file.isPublic(),
                 file.getTags(),
-                file.getComments(),
+                file.getComments().stream().map(c -> new CommentResponseDTO(c.getId(),c.getContent(),c.getAuthor().getId(),c.getAuthor().getUsername(),c.getAuthorAvatar(),c.getParentCommentId(),c.getCreatedAt(),c.getUpdatedAt())).toList(),
                 file.getCreatedAt()
         );
     }
