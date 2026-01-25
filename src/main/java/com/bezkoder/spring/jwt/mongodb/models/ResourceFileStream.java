@@ -47,12 +47,16 @@ public class ResourceFileStream {
     private boolean isPublic = true;
 
     private int views = 0;
+
     private int likes = 0;
+    private List<String> likedBy = new ArrayList<>();
+
     private int commentsCount = 0;
 
     private List<Comments> comments = new ArrayList<>();
 
     private int shares = 0;
+    
     private int downloads = 0;
 
     @CreatedDate

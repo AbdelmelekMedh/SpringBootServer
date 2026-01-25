@@ -24,6 +24,7 @@ public class ResourceFileStreamDTO {
     private int shares;
     private int views;
     private int likes;
+    private boolean isLiked;
     private int commentsCount;
     private String description;
     private boolean isPublic;
@@ -32,6 +33,13 @@ public class ResourceFileStreamDTO {
     private Instant createdAt;
 
     public static ResourceFileStreamDTO fromEntity(ResourceFileStream file) {
+    return fromEntity(file, null);
+}
+
+    public static ResourceFileStreamDTO fromEntity(ResourceFileStream file, String currentUserId) {
+        boolean isLiked = currentUserId != null
+            && file.getLikedBy() != null
+            && file.getLikedBy().contains(currentUserId);
         return new ResourceFileStreamDTO(
                 file.getId(),
                 file.getFilename(),
@@ -43,11 +51,23 @@ public class ResourceFileStreamDTO {
                 file.getShares(),
                 file.getViews(),
                 file.getLikes(),
+                isLiked,
                 file.getCommentsCount(),
                 file.getDescription(),
                 file.isPublic(),
                 file.getTags(),
-                file.getComments().stream().map(c -> new CommentResponseDTO(c.getId(),c.getContent(),c.getAuthor().getId(),c.getAuthor().getUsername(),c.getAuthorAvatar(),c.getParentCommentId(),c.getCreatedAt(),c.getUpdatedAt())).toList(),
+                file.getComments().stream().map(c -> new CommentResponseDTO(
+                    c.getId(),
+                    c.getContent(),
+                    c.getAuthor().getId(),
+                    c.getAuthor().getUsername(),
+                    c.getAuthorAvatar(),
+                    c.getParentCommentId(),
+                    c.getCreatedAt(),
+                    c.getUpdatedAt(),
+                    c.getLikedBy() != null ? c.getLikedBy().size() : 0,
+                    false
+                )).toList(),
                 file.getCreatedAt()
         );
     }

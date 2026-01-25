@@ -38,9 +38,15 @@ public class CommentController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CommentResponseDTO>> getComments(@PathVariable String videoId) {
-    List<CommentResponseDTO> comments = commentService.getCommentsByVideoId(videoId);
+    public ResponseEntity<List<CommentResponseDTO>> getComments(@PathVariable String videoId, @RequestParam(required = false) String userId) {
+    List<CommentResponseDTO> comments = commentService.getCommentsByVideoId(videoId, userId);
     return ResponseEntity.ok(comments);
+    }
+
+    @PostMapping("/{commentId}/like")
+    public ResponseEntity<?> likeComment(@PathVariable String videoId, @PathVariable String commentId, @RequestParam String userId) {
+        commentService.toggleLikeComment(videoId, commentId, userId);
+        return ResponseEntity.ok(new MessageResponse("Toggled like"));
     }
 
     @PutMapping("/{commentId}")

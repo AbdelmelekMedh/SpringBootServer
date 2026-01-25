@@ -1,6 +1,8 @@
 package com.bezkoder.spring.jwt.mongodb.models;
 
 import java.time.Instant;
+import java.util.ArrayList;
+import java.util.List;
 
 import org.springframework.data.annotation.Id;
 
@@ -25,9 +27,15 @@ public class Comments {
     @NotBlank
     private ImageProfile authorAvatar;
 
-    // null → root comment, not null → reply
     private String parentCommentId;
 
     private Instant createdAt = Instant.now();
+
     private Instant updatedAt;
+
+    private int likeCount = 0;
+    
+    private List<String> likedBy = new ArrayList<>();
+
+    private boolean isLiked = false;
 }

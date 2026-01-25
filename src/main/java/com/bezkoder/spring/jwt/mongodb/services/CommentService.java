@@ -53,23 +53,54 @@ public class CommentService {
     }
 
     public List<CommentResponseDTO> getCommentsByVideoId(String videoId) {
-    ResourceFileStream video = fileRepo.findById(videoId)
-            .orElseThrow(() -> new FileStreamNotFoundException("Video not found: " + videoId));
+        return getCommentsByVideoId(videoId, null);
+    }
 
-    return video.getComments()
-            .stream()
-            .map(c -> new CommentResponseDTO(
-                    c.getId(),
-                    c.getContent(),
-                    c.getAuthor().getId(),
-                    c.getAuthor().getUsername(),
-                    c.getAuthorAvatar(), // if you added avatar
-                    c.getParentCommentId(),
-                    c.getCreatedAt(),
-                    c.getUpdatedAt()
-            ))
-            .collect(Collectors.toList());
-}
+    public List<CommentResponseDTO> getCommentsByVideoId(String videoId, String userId) {
+        ResourceFileStream video = fileRepo.findById(videoId)
+                .orElseThrow(() -> new FileStreamNotFoundException("Video not found: " + videoId));
+
+        return video.getComments()
+                .stream()
+                .map(c -> new CommentResponseDTO(
+                        c.getId(),
+                        c.getContent(),
+                        c.getAuthor().getId(),
+                        c.getAuthor().getUsername(),
+                        c.getAuthorAvatar(),
+                        c.getParentCommentId(),
+                        c.getCreatedAt(),
+                        c.getUpdatedAt(),
+                        c.getLikedBy() != null ? c.getLikedBy().size() : 0,
+                        userId != null && c.getLikedBy() != null && c.getLikedBy().contains(userId)
+                ))
+                .collect(Collectors.toList());
+    }
+
+    public void toggleLikeComment(String videoId, String commentId, String userId) {
+        ResourceFileStream video = fileRepo.findById(videoId)
+                .orElseThrow(() -> new FileStreamNotFoundException("Video not found"));
+
+        Comments comment = video.getComments().stream()
+                .filter(c -> c.getId().equals(commentId))
+                .findFirst()
+                .orElseThrow(() -> new RuntimeException("Comment not found"));
+
+        if (comment.getLikedBy() == null) {
+            comment.setLikedBy(new java.util.ArrayList<>());
+        }
+
+        if (comment.getLikedBy().contains(userId)) {
+            comment.getLikedBy().remove(userId);
+            comment.setLikeCount(Math.max(0, comment.getLikeCount() - 1));
+        } else {
+            comment.getLikedBy().add(userId);
+            comment.setLikeCount(comment.getLikeCount() + 1);
+        }
+
+        comment.setUpdatedAt(Instant.now());
+        fileRepo.save(video);
+    }
 
 
     // UPDATE COMMENT (ONLY AUTHOR)

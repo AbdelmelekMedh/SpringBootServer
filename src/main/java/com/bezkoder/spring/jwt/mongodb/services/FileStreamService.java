@@ -106,14 +106,14 @@ public class FileStreamService {
             .toList();
 }
 
-    public List<ResourceFileStreamDTO> getFeed(int page, int size) {
+    public List<ResourceFileStreamDTO> getFeed(int page, int size, String currentUserId) {
     Pageable pageable = PageRequest.of(page, size, Sort.by(Sort.Direction.DESC, "id"));
 
     return fileStreamRepository
             .findByIsPublicTrue(pageable)
             .getContent()
             .stream()
-            .map(ResourceFileStreamDTO::fromEntity)
+            .map(file -> ResourceFileStreamDTO.fromEntity(file, currentUserId))
             .toList();
     }
 
@@ -127,11 +127,11 @@ public class FileStreamService {
     }
 
     // Get file metadata
-    public ResourceFileStreamDTO getFileById(String id) {
+    public ResourceFileStreamDTO getFileById(String id, String currentUserId) {
         ResourceFileStream file = fileStreamRepository.findById(id)
                 .orElseThrow(() -> new FileStreamNotFoundException("File not found: " + id));
 
-        return ResourceFileStreamDTO.fromEntity(file);
+        return ResourceFileStreamDTO.fromEntity(file, currentUserId);
     }
 
     // Search
@@ -199,6 +199,25 @@ public class FileStreamService {
         }
 
         fileStreamRepository.delete(file);
+    }
+
+    public void toggleLikeFile(String id, String userId) {
+        ResourceFileStream file = fileStreamRepository.findById(id)
+                .orElseThrow(() -> new FileStreamNotFoundException("File not found: " + id));
+
+        if (file.getLikedBy() == null) {
+            file.setLikedBy(new java.util.ArrayList<>());
+        }
+
+        if (file.getLikedBy().contains(userId)) {
+            file.getLikedBy().remove(userId);
+            file.setLikes(Math.max(0, file.getLikes() - 1));
+        } else {
+            file.getLikedBy().add(userId);
+            file.setLikes(file.getLikes() + 1);
+        }
+
+        fileStreamRepository.save(file);
     }
 }
 
